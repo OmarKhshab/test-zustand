@@ -3,7 +3,7 @@
 import type { todoItemProps } from "@/interface/todoItemInterface";
 import { useTodoStore } from "@/lib/todo-store";
 
-export default function TodoItem ({ todo }: { todo: todoItemProps }) {
+export default function TodoItem ({ todo, handleEdit }: { todo: todoItemProps; handleEdit: (id: number) => void }) {
     const toggleTodo = useTodoStore((state) => state.toggleTodo);
     const removeTodo = useTodoStore((state) => state.removeTodo);
     return (
@@ -35,6 +35,11 @@ export default function TodoItem ({ todo }: { todo: todoItemProps }) {
              aria-label={`Mark ${todo.text} as ${todo.completed ? "active" : "completed"}`}
              className="p-1 text-blue-600 hover:bg-blue-100 rounded"
              >✅</button>
+             <button 
+             onClick={() => handleEdit(todo.id)}
+             aria-label={`Edit ${todo.text}`}
+             className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+             >✏️</button>
              <button
              onClick={() => removeTodo(todo.id)}
              aria-label={`Delete ${todo.text}`}

@@ -3,17 +3,20 @@ import type { todoItemProps } from "@/interface/todoItemInterface";
 
 interface TodoStore {
   todos: todoItemProps[];
+  getTodoById: (id: number) => todoItemProps | undefined;
   addTodo: (text: string) => void;
   removeTodo: (id: number) => void;
   toggleTodo: (id: number) => void;
+  updateTodo: (id: number, newText: string) => void;
 }
 
-export const useTodoStore = create<TodoStore>()((set) => ({
+export const useTodoStore = create<TodoStore>()((set, get) => ({
   todos: [
     { id: 1, text: "Learn React", completed: false, createdAt: new Date('2023-01-01') },
     { id: 2, text: "Learn Next.js", completed: true, createdAt: new Date('2023-01-02') },
     { id: 3, text: "Build a Todo App", completed: false, createdAt: new Date('2023-01-03') },
   ],
+  getTodoById: (id) => get().todos.find((todo) => todo.id === id),
   addTodo: (text) => {
     const trimmedText = text.trim();
     if (!trimmedText) return;
@@ -34,4 +37,13 @@ export const useTodoStore = create<TodoStore>()((set) => ({
       todo.id === id ? { ...todo, completed: !todo.completed } : todo,
     ),
   })),
+  updateTodo: (id, newText) => {
+    const trimmedText = newText.trim();
+    if (!trimmedText) return;
+    set((state) => ({
+      todos: state.todos.map((todo) =>
+        todo.id === id ? { ...todo, text: trimmedText } : todo,
+      ),
+    }));
+  },
 }));
